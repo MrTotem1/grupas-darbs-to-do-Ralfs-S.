@@ -21,8 +21,20 @@
                 <input class="form-control" type="text" id="text" placeholder="Ieraksti darbu...">
                 <button onclick="addElement()" class="btn btn-primary" type="button">Pievienot</button>
             </div>
+            <div class="input-group mb-3">
+                <input class="form-control" type="text" placeholder="Meklēt uzdevumu...">
+                <span class="btn-group ">
+                    <button class="btn btn-secondary">Visi</button>
+                    <button class="btn btn-secondary">Aktīvie</button>
+                    <button class="btn btn-secondary">Pabeigtie</button>
+                </span>
+            </div>
 
             <ul id="task-list" class="list-group"></ul>
+            
+            <div>
+                <span id="to-do"></span>
+            </div>
         </div>
 
         <script>
@@ -107,7 +119,15 @@
                 createTask(text, priority);
                 saveData();
             }
-
+            
+            function checkAmountOfDone() {
+                var tasks_done = 0;
+                var text = document.getElementById("to-do");
+                var tasklist = document.getElementById("task-list");
+            
+                document.getElementById("to-do").textContent = tasks_done;
+            }
+            checkAmountOfDone();
         </script>
     </body>
 </html>
