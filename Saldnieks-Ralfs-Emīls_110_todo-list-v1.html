@@ -9,7 +9,7 @@
     </head>
     <body onload="loadData()">
         <div class="container card mt-3 p-3">
-            <h3 class="text-center">Mani darbi V2</h3>
+            <h3 class="text-center">Mani darbi V3</h3>
 
             <div class="input-group mb-3">
                 <select name="priority" id="abc" class="form-select">
@@ -22,7 +22,7 @@
                 <button onclick="addElement()" class="btn btn-primary" type="button">Pievienot</button>
             </div>
             <div class="input-group mb-3">
-                <input class="form-control" type="text" placeholder="Meklēt uzdevumu...">
+                <input class="form-control" id="search" type="text" placeholder="Meklēt uzdevumu...">
                 <span class="btn-group ">
                     <button class="btn btn-secondary">Visi</button>
                     <button class="btn btn-secondary">Aktīvie</button>
@@ -127,7 +127,26 @@
             
                 document.getElementById("to-do").textContent = tasks_done;
             }
-            checkAmountOfDone();
+            //checkAmountOfDone();
+            
+            let searchInput = document.getElementById("search");
+            searchInput.addEventListener("input", e => {
+                const value = e.target.value.toLowerCase();
+            
+                let tasks = document.querySelectorAll("#task-list li");
+            
+                tasks.forEach(task => {
+                    let elementText = task.querySelector(".task-text").textContent;
+                    if (elementText.toLowerCase().includes(value)) {
+                        task.classList.remove("visually-hidden");
+                    } else {
+                        task.classList.add("visually-hidden");
+                    }
+                    //document.getElementById("to-do").textContent = elementText;
+                });
+            
+                //document.getElementById("to-do").textContent = value;
+            });
         </script>
     </body>
 </html>
