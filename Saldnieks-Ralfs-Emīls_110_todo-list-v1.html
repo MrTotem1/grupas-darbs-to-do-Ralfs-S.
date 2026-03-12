@@ -66,8 +66,13 @@
 
             function createTask(text, priority = "Zema", done = false) {
                 const node = document.createElement("li");
-                node.className = "list-group-item d-flex align-items-center justify-content-between";
+                node.className = "list-group-item align-items-center";
                 node.dataset.priority = priority;
+
+                const taskDiv = document.createElement("div");
+                taskDiv.className = "d-flex align-items-center justify-content-between";
+                const changeDiv = document.createElement("div");
+                changeDiv.className = ("visually-hidden d-flex align-items-center justify-content-between");
             
                 const left = document.createElement("div");
                 left.className = "d-flex align-items-center gap-2";
@@ -92,12 +97,15 @@
                     textSpan.classList.add("text-decoration-line-through");
                 }
             
-                node.onclick = function () {
+                left.onclick = function () {
                     textSpan.classList.toggle("text-decoration-line-through");
                     saveData();
                     checkAmountOfDone();
                 };
             
+                const right = document.createElement("div");
+                right.className = "d-flex align-items-center";
+
                 const deleteButton = document.createElement("button");
                 deleteButton.textContent = "Dzēst";
                 deleteButton.className = "btn btn-danger btn-sm";
@@ -107,9 +115,36 @@
                     saveData();
                     checkAmountOfDone();
                 };
+                const changeButton = document.createElement("button");
+                changeButton.textContent = "Labot";
+                changeButton.className = "btn btn-outline-info btn-sm";
+                changeButton.onclick = function (e) {
+                    e.stopPropagation();
+                    taskDiv.classList.add("visually-hidden");
+                    changeDiv.classList.remove("visually-hidden");
+                };
+                right.appendChild(changeButton);
+                right.appendChild(deleteButton);
             
-                node.appendChild(left);
-                node.appendChild(deleteButton);
+                taskDiv.appendChild(left);
+                taskDiv.appendChild(right);
+                node.appendChild(taskDiv);
+
+                const newName = document.createElement("input");
+                newName.classList.add("form-control");// <input class="form-control" type="text" id="text" placeholder="Ieraksti darbu...">
+                changeDiv.appendChild(newName);
+                const newNameSubmit = document.createElement("button");
+                newNameSubmit.textContent = "Saglabāt";
+                newNameSubmit.className = "btn btn-success btn-sm";
+                newNameSubmit.onclick = function (e) {
+                    e.stopPropagation();
+                    textSpan.textContent = newName.value;
+                    saveData();
+                    taskDiv.classList.remove("visually-hidden");
+                    changeDiv.classList.add("visually-hidden");
+                };
+                changeDiv.appendChild(newNameSubmit);
+                node.appendChild(changeDiv);
                 document.getElementById("task-list").appendChild(node);
                 checkAmountOfDone();
             }
