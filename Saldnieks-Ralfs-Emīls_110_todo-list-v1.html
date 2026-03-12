@@ -32,8 +32,9 @@
 
             <ul id="task-list" class="list-group"></ul>
             
-            <div>
+            <div class="d-flex justify-content-between">
                 <span id="to-do"></span>
+                <span onclick="clearDoneTasks()" class="text-danger text-decoration-underline">Notīrīt pabeigtos</span>
             </div>
         </div>
 
@@ -56,6 +57,7 @@
             function loadData() {
                 const data = JSON.parse(localStorage.getItem("tasks")) || [];
                 data.forEach(task => createTask(task.text, task.priority, task.done));
+                checkAmountOfDone();
             }
 
 
@@ -90,6 +92,7 @@
                 node.onclick = function () {
                     textSpan.classList.toggle("text-decoration-line-through");
                     saveData();
+                    checkAmountOfDone();
                 };
             
                 const deleteButton = document.createElement("button");
@@ -99,11 +102,13 @@
                     e.stopPropagation();
                     node.remove();
                     saveData();
+                    checkAmountOfDone();
                 };
             
                 node.appendChild(left);
                 node.appendChild(deleteButton);
                 document.getElementById("task-list").appendChild(node);
+                checkAmountOfDone();
             }
 
 
@@ -121,13 +126,18 @@
             }
             
             function checkAmountOfDone() {
-                var tasks_done = 0;
-                var text = document.getElementById("to-do");
-                var tasklist = document.getElementById("task-list");
+                var tasks_todo = 0;
+                let tasks = document.querySelectorAll("#task-list li");
             
-                document.getElementById("to-do").textContent = tasks_done;
+                tasks.forEach(task => {
+                    let elementClass = task.querySelector(".task-text").classList; //.contains("text-decoration-line-through")
+                    if (!elementClass.contains("text-decoration-line-through")) {
+                        tasks_todo++;
+                    }
+                });
+            
+                document.getElementById("to-do").textContent = "Atlikuši " + tasks_todo + " darbi";
             }
-            //checkAmountOfDone();
             
             let searchInput = document.getElementById("search");
             searchInput.addEventListener("input", e => {
@@ -142,11 +152,20 @@
                     } else {
                         task.classList.add("visually-hidden");
                     }
-                    //document.getElementById("to-do").textContent = elementText;
                 });
-            
-                //document.getElementById("to-do").textContent = value;
             });
+
+            function clearDoneTasks() {
+                let tasks = document.querySelectorAll("#task-list li");
+            
+                tasks.forEach(task => {
+                    let elementClass = task.querySelector(".task-text").classList; //.contains("text-decoration-line-through")
+                    if (elementClass.contains("text-decoration-line-through")) {
+                        task.remove();
+                    }
+                });
+                saveData();
+            }
         </script>
     </body>
 </html>
