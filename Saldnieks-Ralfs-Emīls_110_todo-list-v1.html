@@ -24,9 +24,9 @@
             <div class="input-group mb-3">
                 <input class="form-control" id="search" type="text" placeholder="Meklēt uzdevumu...">
                 <span class="btn-group ">
-                    <button class="btn btn-secondary">Visi</button>
-                    <button class="btn btn-secondary">Aktīvie</button>
-                    <button class="btn btn-secondary">Pabeigtie</button>
+                    <button onclick="switchCategory('visi') "class="btn btn-secondary">Visi</button>
+                    <button onclick="switchCategory('aktivi') "class="btn btn-secondary">Aktīvie</button>
+                    <button onclick="switchCategory('pabeigti') "class="btn btn-secondary">Pabeigtie</button>
                 </span>
             </div>
 
@@ -39,6 +39,9 @@
         </div>
 
         <script>
+            let input = "";
+            let category = "visi";
+
             function saveData() {
                 const tasks = [];
                 document.querySelectorAll("#task-list li").forEach(li => {
@@ -142,29 +145,51 @@
             let searchInput = document.getElementById("search");
             searchInput.addEventListener("input", e => {
                 const value = e.target.value.toLowerCase();
-            
-                let tasks = document.querySelectorAll("#task-list li");
-            
-                tasks.forEach(task => {
-                    let elementText = task.querySelector(".task-text").textContent;
-                    if (elementText.toLowerCase().includes(value)) {
-                        task.classList.remove("visually-hidden");
-                    } else {
-                        task.classList.add("visually-hidden");
-                    }
-                });
+                input = value;
+                searchTasks();
             });
 
             function clearDoneTasks() {
                 let tasks = document.querySelectorAll("#task-list li");
             
                 tasks.forEach(task => {
-                    let elementClass = task.querySelector(".task-text").classList; //.contains("text-decoration-line-through")
+                    let elementClass = task.querySelector(".task-text").classList;
                     if (elementClass.contains("text-decoration-line-through")) {
                         task.remove();
                     }
                 });
                 saveData();
+            }
+            
+            function searchTasks() {
+                let tasks = document.querySelectorAll("#task-list li");
+            
+                tasks.forEach(task => {
+                    let elementText = task.querySelector(".task-text").textContent;
+                    let elementClass = task.querySelector(".task-text").classList;
+                    if (elementText.toLowerCase().includes(input)) {
+                        switch (category) {
+                            case "aktivi":
+                                if(!elementClass.contains("text-decoration-line-through")){task.classList.remove("visually-hidden");}
+                                else {task.classList.add("visually-hidden");}
+                                break;
+                            case "pabeigti":
+                                if(elementClass.contains("text-decoration-line-through")){task.classList.remove("visually-hidden");}
+                                else {task.classList.add("visually-hidden");}
+                                break;
+                        
+                            default:
+                                task.classList.remove("visually-hidden");
+                                break;
+                        }
+                    } else {
+                        task.classList.add("visually-hidden");
+                    }
+                });
+            }
+            function switchCategory(buttonPressed){
+                category = buttonPressed;
+                searchTasks();
             }
         </script>
     </body>
